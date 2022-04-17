@@ -14,6 +14,8 @@ body.appendChild(btnReset);
 
 const container = document.createElement('div');
 container.setAttribute('id', 'container');
+container.style.margin = '10px';
+container.style.border = '2px black solid';
 container.style.flexGrow = 1;
 container.style.maxWidth = '960px';
 container.style.maxHeight = '960px';
@@ -30,9 +32,9 @@ function createSketch(size) {
             div.style.gridColumnEnd = i;
             div.style.gridRowStart = j;
             div.style.gridRowEnd = j;
-            div.style.backgroundColor = 'gray';
+            div.style.backgroundColor = 'light gray';
             div.classList.add('pixel');
-            div.addEventListener('mouseover', turnBlack);
+            div.addEventListener('mouseover', changeColor);
             container.appendChild(div);
         }
     }
@@ -47,8 +49,23 @@ function deleteSketch() {
     }
 }
 
-function turnBlack(e) {
-    this.style.backgroundColor = 'black';
+function changeColor(e) {
+    let color = this.style.backgroundColor;
+    if (color === null ||
+        color === undefined ||
+        color === "") {
+        color = `rgb(${Math.round(Math.random() * 255)},${Math.round(Math.random() * 255)},${Math.round(Math.random() * 255)})`;
+    } else {
+        color = color.split(",");
+        red = parseInt(color[0].trim().substring(4)) - 25;
+        red = red < 0 ? 0 : red;
+        green = parseInt(color[1].trim()) - 25;
+        green = green < 0 ? 0 : green;
+        black = parseInt(color[2].trim()) - 25;
+        black = black < 0 ? 0 : black;
+        color = `rgb(${red},${green},${black})`;
+    }
+    this.style.backgroundColor = color;
 }
 
 function resetSketch(e) {
@@ -64,7 +81,7 @@ function resetSketch(e) {
     } else {
         let items = document.getElementsByClassName('pixel');
         for (let i = 0; i < items.length; i++) {
-            items[i].style.backgroundColor = "gray";
+            items[i].style.backgroundColor = null;
         }
     }
 }
